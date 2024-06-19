@@ -18,11 +18,11 @@ const router = VueRouter.createRouter({
     },
     {
       path: "/products/:productId",
-      component: ShoppingCartPage,
+      component: ProductDetailPage,
     },
     {
       path: "/cart",
-      component: ProductDetailPage,
+      component: ShoppingCartPage,
     },
     {
       path: "/:pathMatch(.*)*",
