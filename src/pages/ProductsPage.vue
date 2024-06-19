@@ -5,6 +5,8 @@
       <img class="product-image" :src="product.imageName" :alt="product.name" />
       <h3 class="product-name">{{ product.name }}</h3>
       <p class="product-price">{{ product.price }}</p>
+      <!-- <router-link class="view-details" :to="{ name: 'ProductDetailPage', params: { 'productId': product.id } }">View
+        Details</router-link> -->
       <button>View Details</button>
     </div>
   </div>
