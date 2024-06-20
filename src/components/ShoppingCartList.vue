@@ -5,7 +5,7 @@
       <h3 class="product-name">{{ product.name }}</h3>
       <p class="product-price">{{ product.price }}</p>
     </div>
-    <button class="remove-button">Remove from Cart</button>
+    <button @click="$emit('remove-from-cart', product.id)" class="remove-button">Remove from Cart</button>
   </div>
 </template>
 

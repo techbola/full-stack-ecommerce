@@ -1,7 +1,7 @@
 <template>
   <h1>Shopping Cart</h1>
   <div v-if="cartItems.length > 0">
-    <ShoppingCartList :products="cartItems" />
+    <ShoppingCartList :products="cartItems" @remove-from-cart="removeFromCart" />
     <button class="checkout-button">Proceed to Checkout</button>
   </div>
   <div v-else>
@@ -21,6 +21,12 @@ export default {
   data() {
     return {
       cartItems: [],
+    }
+  },
+  methods: {
+    async removeFromCart(id) {
+      await axios.delete(`/api/users/12345/cart/${id}`);
+      this.cartItems = this.cartItems.filter(item => item.id !== id);
     }
   },
   async created() {
