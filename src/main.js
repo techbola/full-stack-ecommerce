@@ -7,12 +7,12 @@ import router from "./router";
 import { initializeApp } from "firebase/app";
 
 const firebaseConfig = {
-  apiKey: "AIzaSyC9AKhnu-Ap08gWyE3KY0vtbDuWUiXgwX0",
+  apiKey: process.env.VUE_APP_FIREBASE_API_KEY,
   authDomain: "ecommerce-site-d4aa5.firebaseapp.com",
   projectId: "ecommerce-site-d4aa5",
   storageBucket: "ecommerce-site-d4aa5.appspot.com",
   messagingSenderId: "887046047339",
-  appId: "1:887046047339:web:9b3336523a99687a85532e",
+  appId: process.env.VUE_APP_FIREBASE_APP_ID,
 };
 
 initializeApp(firebaseConfig);
