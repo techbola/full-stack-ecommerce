@@ -1,6 +1,6 @@
 <template>
   <h1>Shopping Cart</h1>
-  <div v-if="cartItems.length > 0">
+  <div v-if="user && cartItems.length > 0">
     <ShoppingCartList :products="cartItems" @remove-from-cart="removeFromCart" />
     <button class="checkout-button">Proceed to Checkout</button>
   </div>
@@ -15,6 +15,7 @@ import ShoppingCartList from '@/components/ShoppingCartList.vue';
 
 export default {
   name: 'ShoppingCartPage',
+  props: ['user'],
   components: {
     ShoppingCartList
   },
@@ -23,16 +24,30 @@ export default {
       cartItems: [],
     }
   },
-  methods: {
-    async removeFromCart(id) {
-      await axios.delete(`/api/users/12345/cart/${id}`);
-      this.cartItems = this.cartItems.filter(item => item.id !== id);
+  watch: {
+    async user(newUserValue) {
+      if (newUserValue) {
+        this.getCartItems(newUserValue);
+      }
     }
   },
+  methods: {
+    async removeFromCart(id) {
+      await axios.delete(`/api/users/${this.user.uid}/cart/${id}`);
+      this.cartItems = this.cartItems.filter(item => item.id !== id);
+    },
+    async getCartItems(user) {
+      const response = await axios.get(`/api/users/${user.uid}/cart/`);
+      const cartItems = response.data;
+      this.cartItems = cartItems;
+    },
+  },
+
   async created() {
-    const response = await axios.get('/api/users/12345/cart/');
-    const cartItems = response.data;
-    this.cartItems = cartItems;
+    // load cartItems if user is logged in
+    if (this.user) {
+      this.getCartItems(this.user);
+    }
   },
 }
 </script>

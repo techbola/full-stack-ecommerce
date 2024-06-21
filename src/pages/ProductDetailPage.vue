@@ -6,11 +6,11 @@
     <div class="product-details">
       <h1>{{ product.name }}</h1>
       <h3 class="price">{{ product.price }}</h3>
-      <button @click="addToCart()" :class="itemIsInCart ? 'grey-button' : 'add-to-cart'"
+      <button v-if="user" @click="addToCart()" :class="itemIsInCart ? 'grey-button' : 'add-to-cart'"
         :disabled="itemIsInCart ? true : false">Add
         to
         cart</button>
-      <button class="sign-in" @click="signIn">Sign in to add to cart</button>
+      <button v-else class="sign-in" @click="signIn">Sign in to add to cart</button>
     </div>
   </div>
   <div v-else>
@@ -25,6 +25,7 @@ import NotFoundPage from './NotFoundPage.vue';
 
 export default {
   name: 'ProductDetailPage',
+  props: ['user'],
   components: {
     NotFoundPage,
   },
@@ -36,11 +37,11 @@ export default {
   },
   methods: {
     async addToCart() {
-      await axios.post('/api/users/12345/cart', { id: this.$route.params.productId });
+      await axios.post(`/api/users/${this.user.uid}/cart`, { id: this.$route.params.productId });
       alert('Product added to cart!');
     },
-    async getCartItems() {
-      const response = await axios.get('/api/users/12345/cart/');
+    async getCartItems(user) {
+      const response = await axios.get(`/api/users/${user.uid}/cart/`);
       const cartItems = response.data;
       this.cartItems = cartItems;
     },
@@ -64,6 +65,13 @@ export default {
       return this.cartItems.some(item => item.id === this.$route.params.productId);
     }
   },
+  watch: {
+    async user(newUserValue) {
+      if (newUserValue) {
+        this.getCartItems(newUserValue);
+      }
+    }
+  },
   async created() {
     const auth = getAuth();
     if (isSignInWithEmailLink(auth, window.location.href)) {
@@ -77,7 +85,9 @@ export default {
     const product = response.data;
     this.product = product;
 
-    this.getCartItems();
+    if (this.user) {
+      this.getCartItems(this.user);
+    }
   },
 }
 </script>
